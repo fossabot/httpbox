@@ -1,6 +1,9 @@
 # httpbox
 **[WIP]** Command line HTTP client that aims to be as feature rich as you your shell scripts will like
 
+**WARNING:** This is me, finally finding the time to learn a bit of Rust and _Rust-best-practices_.
+If I'm doing anything wrong, please make sure you yell at me... gently. :)
+
 ## TODO / Desirable features list
 
 * ~~verbosity control~~
