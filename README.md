@@ -11,6 +11,8 @@ If I'm doing anything wrong, please make sure you yell at me... gently. :)
 * ~~help and version flags~~
 * ~~meta information for --help coming from Cargo.toml (i.e. single source for binary metadata)~~
 * support for all http methods
+* disable gzip
+* provide customer root certificate
 * provide headers
 * provide User Agent (specialized header)
 * provide Cookies (specialized header)
