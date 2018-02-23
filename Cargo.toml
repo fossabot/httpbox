@@ -1,0 +1,14 @@
+[package]
+name = "httpbox"
+version = "0.0.1"
+authors = ["Ivan De Marino <detronizator@gmail.com>"]
+description = "Command line HTTP client that aims to be as feature rich as you your shell scripts will like"
+homepage = "https://github.com/detro"
+license = "Apache-2.0"
+readme = "README.md"
+
+[dependencies]
+reqwest = "0.8.5"
+clap = "2.30.0"
+log = "0.4.1"
+log4rs = "0.8.0"
