@@ -86,7 +86,7 @@ fn supported_methods() -> [&'static str; 9] {
   ]
 }
 
-fn determine_input_arguments() -> ArgMatches {
+fn determine_input_arguments<'a>() -> ArgMatches<'a> {
   App::new(crate_name!())
     .version(crate_version!())
     .about(crate_description!())
