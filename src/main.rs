@@ -32,26 +32,26 @@ fn main() {
       .required(true)
       .help("URL to send the HTTP(S) request to"))
     .arg(Arg::with_name(ARG_METHOD)
-      .short(ARG_METHOD.chars().next().unwrap().to_string())
+      .short(first_char(ARG_METHOD))
       .long(ARG_METHOD)
       .value_name("METHOD")
       .default_value(Method::Get.as_ref())
-      .possible_values(&get_supported_methods())
+      .possible_values(&supported_methods())
       .help("HTTP Method"))
     .arg(Arg::with_name(ARG_OUTPUT)
-      .short(ARG_OUTPUT.chars().next().unwrap().to_string())
+      .short(first_char(ARG_OUTPUT))
       .long(ARG_OUTPUT)
       .value_name("FILE")
       .default_value("STDOUT")
       .help("Write output to FILE"))
     .arg(Arg::with_name(ARG_VERBOSE)
-      .short(ARG_VERBOSE.chars().next().unwrap().to_string())
+      .short(first_char(ARG_VERBOSE))
       .long(ARG_VERBOSE)
       .multiple(true)
       .required(false)
       .help("Verbosity level (can specify multiple times)"))
     .arg(Arg::with_name(ARG_QUIET)
-      .short(ARG_QUIET.chars().next().unwrap().to_string())
+      .short(first_char(ARG_QUIET))
       .long(ARG_QUIET)
       .required(false)
       .help("Don't write anything to standard output (i.e. 'quiet mode')"))
@@ -110,5 +110,9 @@ fn init_logging(log_level_filter: LevelFilter) {
     .build(Root::builder().appender("stdout").build(log_level_filter))
     .unwrap();
   log4rs::init_config(log_config).unwrap();
+}
+
+fn first_char(input: &str) -> String {
+  input.chars().next().unwrap().to_string()
 }
 
