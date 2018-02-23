@@ -63,27 +63,13 @@ fn main() {
   trace!("Written {} bytes", bytes_written);
 }
 
+// -------------------------------------------------------------------------------------------- CORE
 #[allow(unused)]
 fn build_client(arg_matches: &ArgMatches) -> Client {
   reqwest::Client::builder()
     .gzip(true) // TODO make configurable via `arg_matches`
     .timeout(Duration::from_secs(30)) // TODO make configurable via `arg_matches`
     .build().unwrap()
-}
-
-// --------------------------------------------------------------------------------------- UTILITIES
-fn supported_methods() -> [&'static str; 9] {
-  [
-    Method::Get.as_ref(),
-    Method::Post.as_ref(),
-    Method::Put.as_ref(),
-    Method::Delete.as_ref(),
-    Method::Head.as_ref(),
-    Method::Options.as_ref(),
-    Method::Connect.as_ref(),
-    Method::Trace.as_ref(),
-    Method::Patch.as_ref()
-  ]
 }
 
 fn determine_input_arguments<'a>() -> ArgMatches<'a> {
@@ -148,6 +134,7 @@ fn determine_log_level_filter(arg_matches: &ArgMatches) -> LevelFilter {
   }
 }
 
+// ------------------------------------------------------------------------------------------- UTILS
 fn init_logging(log_level_filter: LevelFilter) {
   // TODO Make the following list of packages to filter out a bit more flexible
   let log_config = Config::builder()
@@ -159,6 +146,20 @@ fn init_logging(log_level_filter: LevelFilter) {
     .unwrap();
 
   log4rs::init_config(log_config).unwrap();
+}
+
+fn supported_methods() -> [&'static str; 9] {
+  [
+    Method::Get.as_ref(),
+    Method::Post.as_ref(),
+    Method::Put.as_ref(),
+    Method::Delete.as_ref(),
+    Method::Head.as_ref(),
+    Method::Options.as_ref(),
+    Method::Connect.as_ref(),
+    Method::Trace.as_ref(),
+    Method::Patch.as_ref()
+  ]
 }
 
 fn first_char(input: &str) -> String {
