@@ -13,6 +13,7 @@ use log4rs::append::console::ConsoleAppender;
 use log4rs::config::{Appender, Config, Root};
 use log::LevelFilter;
 use reqwest::Method;
+use std::str::FromStr;
 
 // --------------------------------------------------------------------------------------- CONSTANTS
 const ARG_URL: &'static str = "url";
@@ -59,17 +60,18 @@ fn main() {
 
   // Determine the Log Level filtering
   let log_level_filter = determine_log_level_filter(&arg_matches);
+  let http_method = determine_http_method(arg_matches.value_of(ARG_METHOD).unwrap());
 
   // Configure Logging
   init_logging(log_level_filter);
 
   // Log the given input, as seen by us
-  debug!("* url: {}", arg_matches.value_of("url").unwrap());
-  debug!("* method: {}", arg_matches.value_of("method").unwrap());
-  debug!("* output: {}", arg_matches.value_of("output").unwrap());
+  debug!("* {}: {}", ARG_URL, arg_matches.value_of(ARG_URL).unwrap());
+  debug!("* {}: {}", ARG_OUTPUT, arg_matches.value_of(ARG_OUTPUT).unwrap());
+  debug!("* {}: {}", ARG_METHOD, http_method);
+  trace!("* {}: {}", ARG_VERBOSE, arg_matches.occurrences_of(ARG_VERBOSE));
+  trace!("* {}: {}", ARG_QUIET, arg_matches.occurrences_of(ARG_QUIET));
   debug!("* log level: {}", log_level_filter);
-  trace!("* verbose: {}", arg_matches.occurrences_of("verbose"));
-  trace!("* quiet: {}", arg_matches.occurrences_of("quiet"));
 
   // TODO Actually do some http already!
 
@@ -77,7 +79,7 @@ fn main() {
 }
 
 // --------------------------------------------------------------------------------------- UTILITIES
-fn get_supported_methods() -> [&'static str; 9] {
+fn supported_methods() -> [&'static str; 9] {
   [
     Method::Get.as_ref(),
     Method::Post.as_ref(),
@@ -91,11 +93,15 @@ fn get_supported_methods() -> [&'static str; 9] {
   ]
 }
 
+fn determine_http_method(arg_method: &str) -> Method {
+  Method::from_str(arg_method).unwrap()
+}
+
 fn determine_log_level_filter(arg_matches: &ArgMatches) -> LevelFilter {
-  if arg_matches.occurrences_of("quiet") == 1 {
+  if arg_matches.occurrences_of(ARG_QUIET) == 1 {
     LevelFilter::Warn
   } else {
-    match arg_matches.occurrences_of("verbose") {
+    match arg_matches.occurrences_of(ARG_VERBOSE) {
       0 => LevelFilter::Info,
       1 => LevelFilter::Debug,
       2 | _ => LevelFilter::Trace
@@ -104,11 +110,11 @@ fn determine_log_level_filter(arg_matches: &ArgMatches) -> LevelFilter {
 }
 
 fn init_logging(log_level_filter: LevelFilter) {
-  let stdout_log_appender = ConsoleAppender::builder().build();
   let log_config = Config::builder()
-    .appender(Appender::builder().build("stdout", Box::new(stdout_log_appender)))
+    .appender(Appender::builder().build("stdout", Box::new(ConsoleAppender::builder().build())))
     .build(Root::builder().appender("stdout").build(log_level_filter))
     .unwrap();
+
   log4rs::init_config(log_config).unwrap();
 }
 
