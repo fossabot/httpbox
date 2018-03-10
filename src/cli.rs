@@ -88,14 +88,14 @@ pub fn get_output_writer(arg_matches: &ArgMatches, resume: bool) -> Result<Box<W
 
     Ok(Box::new(io::stdout()))
   } else if resume && Path::new(output_filename).exists() {
-    trace!("Output will be appended to {} (resume)", output_filename);
+    trace!("Output will be appended to '{}' file (resume)", output_filename);
 
     match OpenOptions::new().append(true).open(output_filename) {
       Ok(file) => Ok(Box::new(file)),
       Err(error) => Err(error),
     }
   } else {
-    trace!("Output will be written to {}", output_filename);
+    trace!("Output will be written to '{}' file", output_filename);
 
     match OpenOptions::new().create(true).write(true).open(output_filename) {
       Ok(file) => Ok(Box::new(file)),
