@@ -12,13 +12,13 @@ If I'm doing anything wrong, please make sure you yell at me... gently. :)
 * ~~meta information for --help coming from Cargo.toml (i.e. single source for binary metadata)~~
 * ~~support for all http methods~~
 * ~~default output to stdout~~
+* ~~able to output to a given file~~
 * disable gzip
 * provide customer root certificate
 * provide headers
 * provide User Agent (specialized header)
 * provide Cookies (specialized header)
 * provide User Agent strings shorthands (i.e. 'macosx-chrome-60' or 'windows-edge')
-* able to output to a given file
 * multiple concurrent requests to download a file (if supported by target server)
 * determine max redirection
 * use IPv4 protocol (default)
