@@ -6,6 +6,7 @@ use std::str::FromStr;
 use std::io::{self, Write, Result};
 use std::path::Path;
 use std::fs::OpenOptions;
+use ::core;
 
 pub const ARG_URL: &'static str = "URL";
 pub const ARG_METHOD: &'static str = "method";
@@ -15,18 +16,6 @@ pub const ARG_VERBOSE: &'static str = "verbose";
 pub const ARG_QUIET: &'static str = "quiet";
 
 pub fn build_arg_matches<'a>() -> ArgMatches<'a> {
-  let supported_methods = [
-    Method::Get.as_ref(),
-    Method::Post.as_ref(),
-    Method::Put.as_ref(),
-    Method::Delete.as_ref(),
-    Method::Head.as_ref(),
-    Method::Options.as_ref(),
-    Method::Connect.as_ref(),
-    Method::Trace.as_ref(),
-    Method::Patch.as_ref()
-  ];
-
   App::new(crate_name!())
     .version(crate_version!())
     .about(crate_description!())
@@ -40,7 +29,7 @@ pub fn build_arg_matches<'a>() -> ArgMatches<'a> {
       .long(ARG_METHOD)
       .value_name("METHOD")
       .default_value(Method::Get.as_ref())
-      .possible_values(&supported_methods)
+      .possible_values(core::supported_methods().as_ref())
       .help("HTTP Method"))
     .arg(Arg::with_name(ARG_OUTPUT)
       .short(first_char(ARG_OUTPUT))

@@ -1,12 +1,10 @@
 // ------------------------------------------------------------------------------- 3rd PARTY IMPORTS
-// CLI Arguments parsing dependency
-#[macro_use]
 extern crate clap;
-// Logging dependency
 #[macro_use]
 extern crate log;
 extern crate log4rs;
 extern crate reqwest;
+extern crate httpbox;
 
 use clap::ArgMatches;
 use log4rs::append::console::ConsoleAppender;
@@ -16,8 +14,7 @@ use reqwest::Client;
 use std::io::Write;
 use std::time::Duration;
 use std::process;
-
-mod cli;
+use httpbox::cli;
 
 // --------------------------------------------------------------------------------------- CONSTANTS
 fn main() {

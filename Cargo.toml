@@ -12,3 +12,11 @@ reqwest = "0.8.5"
 clap = "2.30.0"
 log = "0.4.1"
 log4rs = "0.8.0"
+
+[lib]
+name = "httpbox"
+path = "src/lib.rs"
+
+[[bin]]
+name = "httpbox"
+path = "src/main.rs"
