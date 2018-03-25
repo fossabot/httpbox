@@ -17,7 +17,7 @@ use std::str::FromStr;
 pub const ARG_URL: &'static str = "URL";
 pub const ARG_METHOD: &'static str = "method";
 pub const ARG_OUTPUT: &'static str = "output";
-pub const ARG_OUTPUT_DEFAULT: &'static str = "STDOUT";
+pub const ARG_OUTPUT_DEFAULT: &'static str = "-";
 pub const ARG_VERBOSE: &'static str = "verbose";
 pub const ARG_QUIET: &'static str = "quiet";
 
@@ -49,18 +49,18 @@ pub fn build_arg_matches_from<'a, I, T>(iter: I) -> ClapResult<ArgMatches<'a>>
       .long(ARG_OUTPUT)
       .value_name("FILE")
       .default_value(ARG_OUTPUT_DEFAULT)
-      .help("Write output to FILE"))
+      .help("Write response body to file (omit or '-' for std.output)"))
     .arg(Arg::with_name(ARG_VERBOSE)
       .short(first_char(ARG_VERBOSE))
       .long(ARG_VERBOSE)
       .multiple(true)
       .required(false)
-      .help("Verbosity level (can specify multiple times)"))
+      .help("Verbosity level (can use multiple times)"))
     .arg(Arg::with_name(ARG_QUIET)
       .short(first_char(ARG_QUIET))
       .long(ARG_QUIET)
       .required(false)
-      .help("Don't write anything to standard output (i.e. 'quiet mode')"))
+      .help("Don't write anything to std.output (i.e. 'quiet mode')"))
     .get_matches_from_safe(iter)
 }
 
