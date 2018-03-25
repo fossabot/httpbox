@@ -1,70 +1,50 @@
 // ------------------------------------------------------------------------------- 3rd PARTY IMPORTS
-extern crate clap;
-#[macro_use]
-extern crate log;
+#[macro_use] extern crate log;
 extern crate log4rs;
 extern crate reqwest;
 extern crate httpbox;
 
-use clap::ArgMatches;
 use log4rs::append::console::ConsoleAppender;
 use log4rs::config::{Appender, Config, Logger, Root};
 use log::LevelFilter;
 use reqwest::Client;
 use std::io::Write;
 use std::time::Duration;
-use std::process;
-use httpbox::cli;
+
+use httpbox::cli::CLI;
+use httpbox::core::RequestParameters;
 
 // --------------------------------------------------------------------------------------- CONSTANTS
 fn main() {
-  // Parse input arguments
-  let arg_matches = cli::build_arg_matches().unwrap_or_else(|clap_err| {
-    clap_err.exit()
-  });
-  trace!("Parsed input arguments: {:#?}", arg_matches);
+  let cli = CLI::new();
+  let mut req_params = cli.get_request_parameters();
 
   // Configure logging
-  let log_level_filter = cli::get_log_level_filter(&arg_matches);
+  let log_level_filter = cli.get_log_level_filter();
   init_logging(log_level_filter);
-  trace!("log level: {}", log_level_filter);
-
-  // Parse input
-  let url = cli::get_url(&arg_matches);
-  let method = cli::get_method(&arg_matches);
-  let mut output_writer = match cli::get_output_writer(&arg_matches, false) {
-    Ok(boxed_writer) => boxed_writer,
-    Err(err) => {
-      error!("Unable to open output: {}", err);
-      process::exit(1) //< TODO Define a range of error codes to pick from
-    }
-  };
-
-  // Log configuration after parsing
-  trace!("{}: {}", cli::ARG_URL, url);
-  trace!("{}: {}", cli::ARG_METHOD, method);
 
   // Build client, based on input arguments
-  let client = build_client(&arg_matches);
+  let client = build_client(&req_params);
 
   // Setup request
-  let request = client.request(method, url).build().unwrap(); //< TODO More request setup/options here
+  let request = client.request(req_params.method.clone(), req_params.url.clone()).build().unwrap(); //< TODO More request setup/options here
 
   // Execute request and get response
   let mut response = client.execute(request).unwrap();
   trace!("{:#?}", response);
 
   // Write
-  let bytes_written = response.copy_to(output_writer.as_mut()).unwrap();
+  let output_writer = req_params.borrow_mut_output_writer();
+  let bytes_written = response.copy_to(output_writer).unwrap();
   output_writer.flush().unwrap();
   trace!("Written {} bytes", bytes_written);
 }
 
 #[allow(unused)]
-fn build_client(arg_matches: &ArgMatches) -> Client {
+fn build_client(req_params: &RequestParameters) -> Client {
   reqwest::Client::builder()
-    .gzip(true) // TODO make configurable via `arg_matches`
-    .timeout(Duration::from_secs(30)) // TODO make configurable via `arg_matches`
+    .gzip(true) // TODO make configurable via `req_params`
+    .timeout(Duration::from_secs(30)) // TODO make configurable via `req_params`
     .build().unwrap()
 }
 

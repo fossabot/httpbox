@@ -1,10 +1,17 @@
 use reqwest::{Method, Url};
 use std::io::Write;
+use std::borrow::BorrowMut;
 
 pub struct RequestParameters {
-  method: Method,
-  url: Url,
-  output_writer: Box<Write>
+  pub method: Method,
+  pub url: Url,
+  pub output_writer: Box<Write>
+}
+
+impl RequestParameters {
+  pub fn borrow_mut_output_writer(&mut self) -> &mut Box<Write> {
+    self.output_writer.borrow_mut()
+  }
 }
 
 pub const SUPPORTED_METHODS: [Method; 9] = [

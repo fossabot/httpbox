@@ -1,8 +1,8 @@
 // Self
 use ::core;
 // Third-party
-use clap::{App, Arg, ArgMatches};
-use clap::Result as ClapResult;
+use clap::{App, Arg, ArgMatches, Result as ClapResult};
+#[allow(unused_imports)] use clap::ErrorKind;
 use log::LevelFilter;
 use reqwest::{Method, Url};
 // Std
@@ -21,11 +21,62 @@ pub const ARG_OUTPUT_DEFAULT: &'static str = "-";
 pub const ARG_VERBOSE: &'static str = "verbose";
 pub const ARG_QUIET: &'static str = "quiet";
 
-pub fn build_arg_matches<'a>() -> ClapResult<ArgMatches<'a>> {
-  build_arg_matches_from(&mut env::args_os())
+pub struct CLI<'a> {
+  arg_matches: ArgMatches<'a>
 }
 
-pub fn build_arg_matches_from<'a, I, T>(iter: I) -> ClapResult<ArgMatches<'a>>
+impl<'a> CLI<'a> {
+  pub fn new() -> CLI<'a> {
+    let instance = CLI {
+      arg_matches: build_arg_matches_from(&mut env::args_os()).unwrap_or_else(|clap_err| {
+        clap_err.exit()
+      })
+    };
+
+    trace!("Parsed input arguments: {:#?}", instance.arg_matches);
+    return instance;
+  }
+
+  pub fn get_method(&self) -> Method {
+    let method = get_method(&self.arg_matches);
+    trace!("{}: {}", ARG_METHOD, method);
+    return method;
+  }
+
+  pub fn get_url(&self) -> Url {
+    let url = get_url(&self.arg_matches);
+    trace!("{}: {}", ARG_URL, url);
+    return url;
+  }
+
+  pub fn get_output_writer(&self) -> Result<Box<Write>> {
+    get_output_writer(&self.arg_matches, false)
+  }
+
+  pub fn get_log_level_filter(&self) -> LevelFilter {
+    let log_level_filter = get_log_level_filter(&self.arg_matches);
+    trace!("log level: {}", log_level_filter);
+    return log_level_filter;
+  }
+
+  pub fn get_request_parameters(&self) -> core::RequestParameters {
+    core::RequestParameters {
+      url: self.get_url(),
+      method: self.get_method(),
+      output_writer: match self.get_output_writer() {
+        Ok(boxed_writer) => boxed_writer,
+        Err(err) => {
+          error!("Unable to open output: {}", err);
+          process::exit(1) //< TODO Define a range of error codes to pick from
+        }
+      },
+    }
+  }
+}
+
+// ------------------------------------------------------------------------------- Private Functions
+
+fn build_arg_matches_from<'a, I, T>(iter: I) -> ClapResult<ArgMatches<'a>>
   where
     I: IntoIterator<Item=T>,
     T: Into<OsString> + Clone {
@@ -64,13 +115,13 @@ pub fn build_arg_matches_from<'a, I, T>(iter: I) -> ClapResult<ArgMatches<'a>>
     .get_matches_from_safe(iter)
 }
 
-pub fn get_method(arg_matches: &ArgMatches) -> Method {
+fn get_method(arg_matches: &ArgMatches) -> Method {
   let arg_method = arg_matches.value_of(ARG_METHOD).unwrap();
 
   Method::from_str(arg_method).unwrap()
 }
 
-pub fn get_url(arg_matches: &ArgMatches) -> Url {
+fn get_url(arg_matches: &ArgMatches) -> Url {
   let url_str = arg_matches.value_of(ARG_URL).unwrap();
 
   match Url::parse(url_str) {
@@ -82,7 +133,7 @@ pub fn get_url(arg_matches: &ArgMatches) -> Url {
   }
 }
 
-pub fn get_output_writer(arg_matches: &ArgMatches, resume: bool) -> Result<Box<Write>> {
+fn get_output_writer(arg_matches: &ArgMatches, resume: bool) -> Result<Box<Write>> {
   let output_filename = arg_matches.value_of(ARG_OUTPUT).unwrap();
 
   if ARG_OUTPUT_DEFAULT == output_filename {
@@ -106,7 +157,7 @@ pub fn get_output_writer(arg_matches: &ArgMatches, resume: bool) -> Result<Box<W
   }
 }
 
-pub fn get_log_level_filter(arg_matches: &ArgMatches) -> LevelFilter {
+fn get_log_level_filter(arg_matches: &ArgMatches) -> LevelFilter {
   if arg_matches.occurrences_of(ARG_QUIET) == 1 {
     LevelFilter::Warn
   } else {
@@ -120,4 +171,110 @@ pub fn get_log_level_filter(arg_matches: &ArgMatches) -> LevelFilter {
 
 fn first_char(input: &str) -> String {
   input.chars().next().unwrap().to_string()
+}
+
+// ------------------------------------------------------------------------------ Private Unit Tests
+
+#[test]
+fn should_fail_on_empty_args() {
+  let result = build_arg_matches_from(vec!["exec"]);
+  assert!(result.is_err());
+  assert_eq!(result.unwrap_err().kind, ErrorKind::MissingRequiredArgument);
+}
+
+#[test]
+fn should_handle_mandatory_url_arg() {
+  let result = build_arg_matches_from(vec!["exec", "http://example.com"]);
+  assert!(!result.is_err());
+  assert_eq!(result.unwrap().value_of(ARG_URL).unwrap(), "http://example.com");
+}
+
+#[test]
+fn should_handle_help_arg() {
+  let result = build_arg_matches_from(vec!["exec", "--help"]);
+  assert!(result.is_err());
+  assert_eq!(result.unwrap_err().kind, ErrorKind::HelpDisplayed);
+
+  let result = build_arg_matches_from(vec!["exec", "-h"]);
+  assert!(result.is_err());
+  assert_eq!(result.unwrap_err().kind, ErrorKind::HelpDisplayed);
+}
+
+#[test]
+fn should_handle_version_arg() {
+  let result = build_arg_matches_from(vec!["exec", "--version"]);
+  assert!(result.is_err());
+  assert_eq!(result.unwrap_err().kind, ErrorKind::VersionDisplayed);
+
+  let result = build_arg_matches_from(vec!["exec", "-V"]);
+  assert!(result.is_err());
+  assert_eq!(result.unwrap_err().kind, ErrorKind::VersionDisplayed);
+}
+
+#[test]
+fn should_fail_for_unexpected_arg() {
+  let result = build_arg_matches_from(vec!["exec", "http://example.com", "unexpected_2nd_arg"]);
+  assert!(result.is_err());
+  assert_eq!(result.unwrap_err().kind, ErrorKind::UnknownArgument);
+}
+
+#[test]
+fn should_allow_multiple_verbose_arg() {
+  let result = build_arg_matches_from(vec!["exec", "http://example.com", "-vvvvvv"]);
+  assert!(!result.is_err());
+  assert_eq!(result.unwrap().occurrences_of(ARG_VERBOSE), 6 as u64);
+}
+
+#[test]
+fn should_handle_quiet_arg() {
+  let result = build_arg_matches_from(vec!["exec", "http://example.com", "--quiet"]);
+  assert!(!result.is_err());
+  assert_eq!(result.unwrap().occurrences_of(ARG_QUIET), 1 as u64);
+
+  let result = build_arg_matches_from(vec!["exec", "http://example.com", "-q"]);
+  assert!(!result.is_err());
+  assert_eq!(result.unwrap().occurrences_of(ARG_QUIET), 1 as u64);
+}
+
+#[test]
+fn should_handle_method_arg() {
+  let result = build_arg_matches_from(vec!["exec", "http://example.com", "-m"]);
+  assert!(!result.is_err());
+  assert_eq!(result.unwrap().value_of(ARG_METHOD).unwrap(), "GET");
+
+  core::SUPPORTED_METHODS.iter().for_each(|method| {
+    let result = build_arg_matches_from(vec!["exec", "http://example.com", "-m", method.as_ref()]);
+    assert!(!result.is_err());
+    assert_eq!(result.unwrap().value_of(ARG_METHOD).unwrap(), method.as_ref());
+
+    let result = build_arg_matches_from(vec!["exec", "http://example.com", "--method", method.as_ref()]);
+    assert!(!result.is_err());
+    assert_eq!(result.unwrap().value_of(ARG_METHOD).unwrap(), method.as_ref());
+  });
+}
+
+#[test]
+fn should_failt_on_invalid_method_arg() {
+  let result = build_arg_matches_from(vec!["exec", "http://example.com", "-m", "PEST"]);
+  assert!(result.is_err());
+  assert_eq!(result.unwrap_err().kind, ErrorKind::InvalidValue);
+
+  let result = build_arg_matches_from(vec!["exec", "http://example.com", "--method", "PAST"]);
+  assert!(result.is_err());
+  assert_eq!(result.unwrap_err().kind, ErrorKind::InvalidValue);
+}
+
+#[test]
+fn should_handle_output_arg() {
+  let result = build_arg_matches_from(vec!["exec", "http://example.com"]);
+  assert!(!result.is_err());
+  assert_eq!(result.unwrap().value_of(ARG_OUTPUT).unwrap(), ARG_OUTPUT_DEFAULT);
+
+  let result = build_arg_matches_from(vec!["exec", "http://example.com", "-o"]);
+  assert!(!result.is_err());
+  assert_eq!(result.unwrap().value_of(ARG_OUTPUT).unwrap(), ARG_OUTPUT_DEFAULT);
+
+  let result = build_arg_matches_from(vec!["exec", "http://example.com", "--output", "relative/path/to/file"]);
+  assert!(!result.is_err());
+  assert_eq!(result.unwrap().value_of(ARG_OUTPUT).unwrap(), "relative/path/to/file");
 }
