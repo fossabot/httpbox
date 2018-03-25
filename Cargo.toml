@@ -1,6 +1,6 @@
 [package]
 name = "httpbox"
-version = "0.0.2"
+version = "0.0.3-wip"
 authors = ["Ivan De Marino <detronizator@gmail.com>"]
 description = "Command line HTTP client that aims to be as feature rich as you your shell scripts will like"
 homepage = "https://github.com/detro"

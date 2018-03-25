@@ -1,12 +1,18 @@
+// Self
+use ::core;
+// Third-party
 use clap::{App, Arg, ArgMatches};
+use clap::Result as ClapResult;
 use log::LevelFilter;
 use reqwest::{Method, Url};
+// Std
+use std::env;
+use std::ffi::OsString;
+use std::fs::OpenOptions;
+use std::io::{self, Result, Write};
+use std::path::Path;
 use std::process;
 use std::str::FromStr;
-use std::io::{self, Write, Result};
-use std::path::Path;
-use std::fs::OpenOptions;
-use ::core;
 
 pub const ARG_URL: &'static str = "URL";
 pub const ARG_METHOD: &'static str = "method";
@@ -15,7 +21,14 @@ pub const ARG_OUTPUT_DEFAULT: &'static str = "STDOUT";
 pub const ARG_VERBOSE: &'static str = "verbose";
 pub const ARG_QUIET: &'static str = "quiet";
 
-pub fn build_arg_matches<'a>() -> ArgMatches<'a> {
+pub fn build_arg_matches<'a>() -> ClapResult<ArgMatches<'a>> {
+  build_arg_matches_from(&mut env::args_os())
+}
+
+pub fn build_arg_matches_from<'a, I, T>(iter: I) -> ClapResult<ArgMatches<'a>>
+  where
+    I: IntoIterator<Item=T>,
+    T: Into<OsString> + Clone {
   App::new(crate_name!())
     .version(crate_version!())
     .about(crate_description!())
@@ -48,7 +61,7 @@ pub fn build_arg_matches<'a>() -> ArgMatches<'a> {
       .long(ARG_QUIET)
       .required(false)
       .help("Don't write anything to standard output (i.e. 'quiet mode')"))
-    .get_matches()
+    .get_matches_from_safe(iter)
 }
 
 pub fn get_method(arg_matches: &ArgMatches) -> Method {

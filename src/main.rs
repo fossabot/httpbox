@@ -19,7 +19,9 @@ use httpbox::cli;
 // --------------------------------------------------------------------------------------- CONSTANTS
 fn main() {
   // Parse input arguments
-  let arg_matches = cli::build_arg_matches();
+  let arg_matches = cli::build_arg_matches().unwrap_or_else(|clap_err| {
+    clap_err.exit()
+  });
   trace!("Parsed input arguments: {:#?}", arg_matches);
 
   // Configure logging
