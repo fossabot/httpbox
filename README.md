@@ -1,5 +1,7 @@
 # httpbox
-**[WIP]** Command line HTTP client that aims to be as feature rich as you your shell scripts will like
+[![Build Status](https://travis-ci.org/detro/httpbox.svg?branch=master)](https://travis-ci.org/detro/httpbox)
+
+`httpbox` is Command line HTTP client that aims to be as feature rich as your shell scripting skills can handle.
 
 **WARNING:** This is me, finally finding the time to learn a bit of Rust and _Rust-best-practices_.
 If I'm doing anything wrong, please make sure you yell at me... gently. :)

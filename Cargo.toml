@@ -1,11 +1,20 @@
 [package]
 name = "httpbox"
 version = "0.0.3-wip"
-authors = ["Ivan De Marino <detronizator@gmail.com>"]
-description = "Command line HTTP client that aims to be as feature rich as you your shell scripts will like"
-homepage = "https://github.com/detro"
-license = "Apache-2.0"
+
+description = "A command line HTTP client that aims to be as feature rich as your shell scripting skills can handle."
 readme = "README.md"
+categories = ["command-line-utilities", "web-programming::http-client"]
+keywords = ["cli", "http", "client", "download", "parallel"]
+
+authors = ["Ivan De Marino <detronizator@gmail.com>"]
+
+homepage = "https://github.com/detro/httpbox"
+repository = "https://github.com/detro/httpbox.git"
+license = "Apache-2.0"
+
+[badges]
+travis-ci = { repository = "detro/httpbox" }
 
 [dependencies]
 reqwest = "0.8.5"
