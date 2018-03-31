@@ -32,6 +32,16 @@ If I'm doing anything wrong, please make sure you yell at me... gently. :)
 * progress indicator (none, simple, advanced)
 * search for mirros (RESEARCH: how do other clients like 'axel' do this?)
 
+## How do I build `httpbox`
+
+There is nothing special in how to compile `httpbox` compared to any other Rust binary:
+
+1. Install [rustup](https://www.rustup.rs/)
+2. `git clone git@github.com:detro/httpbox.git`
+3. `cd httpbox`
+4. `cargo build` or `cargo build --release` (for the release artifact, duh!)
+5. Binary will be in `target/(debug|release)/httpbox`
+
 ## License
 
 [Apache License 2.0](./LICENSE) ([official page](https://www.apache.org/licenses/LICENSE-2.0))
