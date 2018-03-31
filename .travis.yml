@@ -1,10 +1,6 @@
 # Linux setup required
 dist: trusty
 sudo: required
-addons:
-  apt:
-    packages:
-    - tree
 
 # This is a Rust build
 language: rust
