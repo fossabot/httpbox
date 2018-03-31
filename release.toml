@@ -1,0 +1,6 @@
+sign-commit = true
+
+# Documentation not available yet
+upload-doc = false
+
+dev-version-ext = "dev"
