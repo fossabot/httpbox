@@ -1,15 +1,7 @@
 #!/usr/bin/env bash
 
-if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
-    echo "Using 'cargo' to build on '${TRAVIS_OS_NAME}'"
-    BUILD_TOOL="cargo"
-else
-    echo "Using 'cross' to build on '${TRAVIS_OS_NAME}' (see https://github.com/japaric/cross)"
-    BUILD_TOOL="cross"
-fi
+${RUST_BUILD_TOOL} build --target ${RUST_TARGET} --release
 
-
-${BUILD_TOOL} build --target ${TARGET} --release
-
-tree target/
-file target/release/httpbox
+ls -lh target/
+ls -lh target/${RUST_TARGET}/release
+file target/${RUST_TARGET}/release/httpbox

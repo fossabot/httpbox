@@ -16,31 +16,40 @@ matrix:
   include:
     # ------------------------------------ Stable channel builds
     # Linux 32 and 64 bit
-    - env: TARGET=i686-unknown-linux-gnu
+    - env: RUST_TARGET=i686-unknown-linux-gnu RUST_BUILD_TOOL=cargo
+      os: linux
       rust: stable
-    - env: TARGET=i686-unknown-linux-musl
+#    - env: RUST_TARGET=i686-unknown-linux-musl
+#      rust: stable
+    - env: RUST_TARGET=x86_64-unknown-linux-gnu RUST_BUILD_TOOL=cargo
+      os: linux
       rust: stable
-    - env: TARGET=x86_64-unknown-linux-gnu
-      rust: stable
-    - env: TARGET=x86_64-unknown-linux-musl
-      rust: stable
+#    - env: RUST_TARGET=x86_64-unknown-linux-musl
+#      rust: stable
     # Mac OS X 32 and 64 bit
-    - env: TARGET=i686-apple-darwin
+    - env: RUST_TARGET=i686-apple-darwin RUST_BUILD_TOOL=cargo
       os: osx
       rust: stable
-    - env: TARGET=x86_64-apple-darwin
+    - env: RUST_TARGET=x86_64-apple-darwin RUST_BUILD_TOOL=cargo
       os: osx
       rust: stable
-    # Windows 64 bit
-    - env: TARGET=x86_64-pc-windows-gnu
+    # Windows 32 and 64 bit
+    - env: RUST_TARGET=i686-pc-windows-gnu RUST_BUILD_TOOL=cross
+      os: linux
+      rust: stable
+    - env: RUST_TARGET=x86_64-pc-windows-gnu RUST_BUILD_TOOL=cross
+      os: linux
       rust: stable
     # ------------------------------------ Beta channel builds
     # Beta builds
-    - env: TARGET=i686-unknown-linux-gnu
+    - env: RUST_TARGET=i686-unknown-linux-gnu RUST_BUILD_TOOL=cargo
+      os: linux
       rust: beta
-    - env: TARGET=x86_64-unknown-linux-gnu
+    - env: RUST_TARGET=x86_64-unknown-linux-gnu RUST_BUILD_TOOL=cargo
+      os: linux
       rust: beta
-    - env: TARGET=x86_64-apple-darwin
+    - env: RUST_TARGET=x86_64-apple-darwin RUST_BUILD_TOOL=cargo
+      os: linux
       os: osx
       rust: beta
 
