@@ -37,4 +37,3 @@ path = "src/main.rs"
 [profile.release]
 lto = true
 panic = 'abort'
-rustflags = ["-C", "link-args=-s"]
