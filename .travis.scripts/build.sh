@@ -12,7 +12,7 @@ info "Building release for '${RUST_TARGET}' using '${RUST_BUILD_TOOL}'"
 ${RUST_BUILD_TOOL} build --target ${RUST_TARGET} --release
 
 info "Packaging artifact '${ARTIFACT}' into '${PKG}'"
-tar -C target/${RUST_TARGET}/ -cxvf ${PKG} ${ARTIFACT}
+tar -C target/${RUST_TARGET}/release/ -czvf ${PKG} ${ARTIFACT}
 
 info "Final package content"
 tar -ztvf ${PKG}

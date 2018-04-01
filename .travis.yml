@@ -5,9 +5,6 @@ sudo: required
 # This is a Rust build
 language: rust
 cache: cargo
-before_cache:
-  # Travis can't cache files that are not readable by "others"
-  - chmod -R a+r $HOME/.cargo
 
 # Will need access to the Docker service to run "cross"
 services: docker
