@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Error on unset variables "-u" and exit on error statement "-e"
+set -ue
+
 SCRIPT_ABS_PATH="$(cd "$(dirname "$BASH_SOURCE")" && pwd)/$(basename "$BASH_SOURCE")"
 SCRIPT_DIR_ABS_PATH="$(dirname ${SCRIPT_ABS_PATH})"
 

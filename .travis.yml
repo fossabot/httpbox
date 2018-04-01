@@ -13,39 +13,40 @@ before_cache:
 services: docker
 
 env:
-  - ARTIFACT=httpbox
+  global:
+    - ARTIFACT=httpbox
 
 matrix:
   include:
     # ------------------------------------ Stable channel builds
     # Linux 32 and 64 bit
-    - env: RUST_BUILD_TOOL=cross RUST_TARGET=i686-unknown-linux-gnu PKG=httpbox-i686-linux-gnu.tgz
+    - env: RUST_BUILD_TOOL=cross  RUST_TARGET=i686-unknown-linux-gnu    PKG=httpbox-i686-linux-gnu.tgz
       rust: stable
 #    - env: RUST_TARGET=i686-unknown-linux-musl
 #      rust: stable
-    - env: RUST_BUILD_TOOL=cargo RUST_TARGET=x86_64-unknown-linux-gnu PKG=httpbox-x86_64-linux-gnu.tgz
+    - env: RUST_BUILD_TOOL=cargo  RUST_TARGET=x86_64-unknown-linux-gnu  PKG=httpbox-x86_64-linux-gnu.tgz
       rust: stable
 #    - env: RUST_TARGET=x86_64-unknown-linux-musl
 #      rust: stable
     # Mac OS X 32 and 64 bit
-    - env: RUST_BUILD_TOOL=cargo RUST_TARGET=i686-apple-darwin PKG=httpbox-i686-macosx.tgz
+    - env: RUST_BUILD_TOOL=cargo  RUST_TARGET=i686-apple-darwin         PKG=httpbox-i686-macosx.tgz
       os: osx
       rust: stable
-    - env: RUST_BUILD_TOOL=cargo RUST_TARGET=x86_64-apple-darwin PKG=httpbox-x86_64-macosx.tgz
+    - env: RUST_BUILD_TOOL=cargo  RUST_TARGET=x86_64-apple-darwin       PKG=httpbox-x86_64-macosx.tgz
       os: osx
       rust: stable
     # Windows 32 and 64 bit
-    - env: RUST_BUILD_TOOL=cross RUST_TARGET=i686-pc-windows-gnu ARTIFACT=httpbox.exe PKG=httpbox-i686-windows.tgz
+    - env: RUST_BUILD_TOOL=cross  RUST_TARGET=i686-pc-windows-gnu       PKG=httpbox-i686-windows.tgz      ARTIFACT=httpbox.exe
       rust: stable
-    - env: RUST_BUILD_TOOL=cross RUST_TARGET=x86_64-pc-windows-gnu ARTIFACT=httpbox.exe PKG=httpbox-x86_64-windows.tgz
+    - env: RUST_BUILD_TOOL=cross  RUST_TARGET=x86_64-pc-windows-gnu     PKG=httpbox-x86_64-windows.tgz    ARTIFACT=httpbox.exe
       rust: stable
     # ------------------------------------ Beta channel builds
     # Beta builds
-    - env: RUST_BUILD_TOOL=cross RUST_TARGET=i686-unknown-linux-gnu
+    - env: RUST_BUILD_TOOL=cross  RUST_TARGET=i686-unknown-linux-gnu
       rust: beta
-    - env: RUST_BUILD_TOOL=cargo RUST_TARGET=x86_64-unknown-linux-gnu
+    - env: RUST_BUILD_TOOL=cargo  RUST_TARGET=x86_64-unknown-linux-gnu
       rust: beta
-    - env: RUST_BUILD_TOOL=cargo RUST_TARGET=x86_64-apple-darwin
+    - env: RUST_BUILD_TOOL=cargo  RUST_TARGET=x86_64-apple-darwin
       os: osx
       rust: beta
 
