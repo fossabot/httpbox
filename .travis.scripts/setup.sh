@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 
+SCRIPT_ABS_PATH="$(cd "$(dirname "$BASH_SOURCE")" && pwd)/$(basename "$BASH_SOURCE")"
+SCRIPT_DIR_ABS_PATH="$(dirname ${SCRIPT_ABS_PATH})"
+
+source ${SCRIPT_DIR_ABS_PATH}/logging.sh
+
 if [ "${RUST_BUILD_TOOL}" = "cargo" ]; then
-    echo "Updating rustup"
+    info "Updating rustup"
     rustup self update
 
-    echo "Setting up build target for '${RUST_TARGET}' if necessary"
+    info "Setting up build target for '${RUST_TARGET}' if necessary"
     rustup target add ${RUST_TARGET} || true
 elif [ "${RUST_BUILD_TOOL}" = "cross" ]; then
-    echo "Installing cross (if absent) (see https://github.com/japaric/cross)"
+    info "Installing cross (if absent) (see https://github.com/japaric/cross)"
     cargo install --list | grep cross || cargo install cross
 else
-    echo "Invalid value for RUST_BUILD_TOOL='${RUST_BUILD_TOOL}': aborting!"
+    error "Invalid value for RUST_BUILD_TOOL='${RUST_BUILD_TOOL}': aborting!"
     exit 1
 fi
