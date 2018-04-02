@@ -11,8 +11,12 @@ source ${SCRIPT_DIR_ABS_PATH}/logging.sh
 info "Building release for '${RUST_TARGET}' using '${RUST_BUILD_TOOL}'"
 ${RUST_BUILD_TOOL} build --target ${RUST_TARGET} --release
 
-info "Packaging artifact '${ARTIFACT}' into '${PKG}'"
-tar -C target/${RUST_TARGET}/release/ -czvf ${PKG} ${ARTIFACT}
+if [ "none" != "${RELEASE_PKG}" ]; then
+    info "Packaging artifact '${ARTIFACT}' into '${RELEASE_PKG}'"
+    tar -C target/${RUST_TARGET}/release/ -czvf ${RELEASE_PKG} ${ARTIFACT}
 
-info "Final package content"
-tar -ztvf ${PKG}
+    info "Final package content"
+    tar -ztvf ${RELEASE_PKG}
+else
+    warn "No release package for this build"
+fi
