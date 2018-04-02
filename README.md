@@ -1,12 +1,24 @@
 # httpbox
 [![Build Status](https://travis-ci.org/detro/httpbox.svg?branch=master)](https://travis-ci.org/detro/httpbox)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-`httpbox` is Command line HTTP client that aims to be as feature rich as your shell scripting skills can handle.
+`httpbox` is a Command line HTTP client that aims to be as feature rich as your shell scripting skills can handle.
 
 **WARNING:** This is me, finally finding the time to learn a bit of Rust and _Rust-best-practices_.
 If I'm doing anything wrong, please make sure you yell at me... gently. :)
 
-## TODO / Desirable features list
+## Releases
+
+In addition to be able to compile it yourself (see _"How to build"_ section below), releases are also
+provided for:
+
+* Linux GNU 32bit and 64bit
+* Mac OS X 32bit and 64bit
+* Windows GNU 32bit and 64bit
+
+Just check out [/releases](https://github.com/detro/httpbox/releases) for the latest binaries.
+
+## TODO features list
 
 * ~~verbosity control~~
 * ~~quiet mode (nothing written on STD_OUT if there are no errors)~~
@@ -32,7 +44,7 @@ If I'm doing anything wrong, please make sure you yell at me... gently. :)
 * progress indicator (none, simple, advanced)
 * search for mirros (RESEARCH: how do other clients like 'axel' do this?)
 
-## How do I build `httpbox`
+## How to build
 
 There is nothing special in how to compile `httpbox` compared to any other Rust binary:
 
