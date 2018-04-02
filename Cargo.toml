@@ -1,6 +1,6 @@
 [package]
 name = "httpbox"
-version = "0.0.3-dev"
+version = "0.1.0"
 
 # At this stage of development, this is barely an executable. Before this is a publish-able library it will take
 # a lot of learning on my part. But one step at a time, I'll get there.
