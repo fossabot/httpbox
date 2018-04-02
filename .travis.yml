@@ -49,3 +49,14 @@ install: |
 
 script: |
   ./.travis.scripts/build.sh
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: "QQ3Kwx6ODMP+CiZR+KNBgkfyZrfskzFdOz/rERGuDY+daY7pSHMelVSnkmdmrsgnJB+7WUkqP30OyjfAbv0DvdE3BloD3nqZphTUyzAIjvcNLbhAMu4V60EKU2tMZXv0SUTkuBrsTVrj5xztwv60t4QMelQsbEHihewx2yWOwPiCdgGBR0Pf8P1J/iBlR6insXNMv1jtCXXCzw0I9yOWhWeH34n4Oy6flbY7zOlIfwOqoSUxCap5jIZYitDYHNVdVvpt9hQhpJQRKEKbKFaUr974XpQkeuahCv+yKfc+YoNI5mk3VP5bp5X6uMlRmUaE3Xnmv+Jk/f/+r8SCVHciB2nE05evYkZoHI0EtqtYhb1vDdwDlkXWQropItNFnM2RaDRg6g4RL0HbeLRbHF6BDAKK+cSVGUNsmhMWPTOrMOhkQ0QvAmeC8alpSQWJRGkUWGlT/+d/DT1f8fmLuLZxICpzRDwywpO9awX3AvVvRPSW4bdZLCbvSWPM9tekfP5TN0B4E7EEmRPv5OG4TEXLkE2BY0rjUNFdN+K1y6/PE7+DSDbKnUX2X8ezNfjdwP1LRe8e1wc4CmXhFVJRRxsxqvwj7L7TWaq9DC0fHSqtcw4oAG5SynAyMQwx75PAoIAXGOIDvfAvoZs/ejV0uQ3g+2yG+7Y4FwPv5cL7s+/EHgI="
+  on:
+    # Only release builds that are tagged and that have a $RELEASE_PKG
+    condition: $RELEASE_PKG != none
+    tags: true
+  file: $RELEASE_PKG
