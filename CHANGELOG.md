@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.0.3 - YYYY-MM-DD
+## 0.1.0 - 2018-04-02
 * To respect tradition on command line, the default OUTPUT is `"-"` (i.e. the _dash_) instead of the `"STDOUT"`: this means that you CAN now name the output file `"STDOUT"` without confusion
 * Started introducing testing (though I'm still learning how best to structure them for Rust)
 * Separating code more and more into modules (first module, `CLI`)
