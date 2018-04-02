@@ -46,6 +46,15 @@ Just check out [/releases](https://github.com/detro/httpbox/releases) for the la
 
 ## How to build
 
+### Binary executable from [crates.io](https://crates.io/crates/httpbox)
+
+A simple `cargo install` should be all you need to do:
+
+1. Install [rustup](https://www.rustup.rs/)
+2. `cargo install httpbox`
+
+### From [GitHub](https://github.com/detro/httpbox) source repository
+
 There is nothing special in how to compile `httpbox` compared to any other Rust binary:
 
 1. Install [rustup](https://www.rustup.rs/)

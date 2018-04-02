@@ -2,11 +2,7 @@
 name = "httpbox"
 version = "0.1.1-dev"
 
-# At this stage of development, this is barely an executable. Before this is a publish-able library it will take
-# a lot of learning on my part. But one step at a time, I'll get there.
-publish = false
-
-description = "A command line HTTP client that aims to be as feature rich as your shell scripting skills can handle."
+description = "A command line HTTP client that aims to be as feature rich as your shell scripting skills can handle"
 readme = "README.md"
 categories = ["command-line-utilities", "web-programming::http-client"]
 keywords = ["cli", "http", "client", "download", "parallel"]
@@ -16,6 +12,8 @@ authors = ["Ivan De Marino <detronizator@gmail.com>"]
 homepage = "https://github.com/detro/httpbox"
 repository = "https://github.com/detro/httpbox.git"
 license = "Apache-2.0"
+
+exclude = [".travis.*"]
 
 [badges]
 travis-ci = { repository = "detro/httpbox" }
